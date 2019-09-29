@@ -81,6 +81,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   void getFirstQuestion() async {
+    _showSpinner = true;
     var rng = new Random();
     for (var i = 0; i < 10; i++) {
       value = min + rng.nextInt(max - min);

@@ -5,6 +5,7 @@ import 'package:quiz_application/LoginPage.dart';
 import 'package:quiz_application/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 final _fireStore = Firestore.instance;
 
@@ -61,9 +62,13 @@ class _ResultState extends State<Result> {
   List<Widget> answerText = [];
   List<String> randomNo = [];
   String display;
+  bool _showSpinner = false;
   String temp;
   int countAnswer = 0;
   void getResult() async {
+    setState(() {
+      _showSpinner = true;
+    });
     var fireBaseUser = await _auth.currentUser();
     userId = fireBaseUser.email;
     // var allanswer =
@@ -104,6 +109,7 @@ class _ResultState extends State<Result> {
         .collection('users').document('$userId').updateData({'result': scoreList});
 
     setState(() {
+      _showSpinner = false;
       resultText.add(
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -122,6 +128,7 @@ class _ResultState extends State<Result> {
       display = uanswerList[i];
       if(uanswerList[i] == answerList[i]){
         setState(() {
+          _showSpinner = false;
           answerText.add(
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -138,6 +145,7 @@ class _ResultState extends State<Result> {
         });
       }else{
         setState(() {
+          _showSpinner = false;
           answerText.add(
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -158,15 +166,15 @@ class _ResultState extends State<Result> {
     // setState(() {
     //   resultText.add(
     //     Padding(
-          // padding: const EdgeInsets.symmetric(vertical: 8.0),
-          // child: Text(
-          //   'Total Score = $fScore / 10',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     fontSize: 20.0,
-          //     color: Colors.lightGreen,
-          //     ),
-          // ),
+    //       padding: const EdgeInsets.symmetric(vertical: 8.0),
+    //       child: Text(
+    //         'Total Score = $fScore / 10',
+    //         textAlign: TextAlign.center,
+    //         style: TextStyle(
+    //           fontSize: 20.0,
+    //           color: Colors.lightGreen,
+    //           ),
+    //       ),
     //     ),
     //   );
     //   resultText.add();
@@ -201,76 +209,79 @@ class _ResultState extends State<Result> {
           title: Text('Quiz Application'),
           backgroundColor: Colors.grey,
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Center(
-                    child: Container(
-                      child: Text(
-                        '\nThank you for giving Quiz.\n\nYour Result',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+        body: ModalProgressHUD(        
+          inAsyncCall: _showSpinner,
+          child: Center(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Center(
+                      child: Container(
+                        child: Text(
+                          '\nThank you for giving Quiz.\nYour Result',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: resultText,
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: resultText,
+                      ),
+                    ),  
+                    //       Center(
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //           children: answerText,
+                    //         ),
+                    //       ),
+                    //   ),
+                    // ),
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: answerText,
+                      ),
                     ),
-                  ),  
-                  //       Center(
-                  //         child: Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //           children: answerText,
-                  //         ),
-                  //       ),
-                  //   ),
-                  // ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: answerText,
-                    ),
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Center(
-                        child: RoundedButton(
-                          colour: Colors.lightBlueAccent,
-                          title: 'Retry',
-                          onPressed: () {
-                            countAnswer = 0;
-                            try {
-                              Navigator.popAndPushNamed(context, DashBoard.id);
-                            } catch (e) {
-                              print(e);
-                            }
+                    Column(
+                      children: <Widget>[
+                        Center(
+                          child: RoundedButton(
+                            colour: Colors.lightBlueAccent,
+                            title: 'Retry',
+                            onPressed: () {
+                              countAnswer = 0;
+                              try {
+                                Navigator.popAndPushNamed(context, DashBoard.id);
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            textSize: 17.0,
+                          ),
+                        ),
+                        Center(
+                          child: RoundedButton(
+                            colour: Colors.lightBlueAccent,
+                            title: 'Sign Out',
+                            onPressed: () {
+                              Navigator.popAndPushNamed(context, LoginScreen.id);
+                              _auth.signOut();
                           },
-                          textSize: 17.0,
+                            textSize: 17.0,
+                          ),
                         ),
-                      ),
-                      Center(
-                        child: RoundedButton(
-                          colour: Colors.lightBlueAccent,
-                          title: 'Sign Out',
-                          onPressed: () {
-                            Navigator.popAndPushNamed(context, LoginScreen.id);
-                            _auth.signOut();
-                        },
-                          textSize: 17.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
