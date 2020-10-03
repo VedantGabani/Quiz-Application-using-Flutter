@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:quiz_application/LoginPage.dart';
+import 'package:quiz_application/PreviousResult.dart';
 import 'package:quiz_application/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +16,6 @@ class MainDashboard extends StatefulWidget {
 class _MainDashboardState extends State<MainDashboard> {
   final _auth = FirebaseAuth.instance;
   bool _showSpinner = false;
-
     Future<bool> _onWillPop() {
     return showDialog(
       context: context,
@@ -107,6 +107,16 @@ class _MainDashboardState extends State<MainDashboard> {
                                 textSize: 17.0,
                                 onPressed: () {
                                   Navigator.popAndPushNamed(context, DashBoard.id);
+                                },
+                              ),
+                          ),
+                          Center(
+                              child: RoundedButton(
+                                colour: Colors.lightBlueAccent,
+                                title: 'Previous Results',
+                                textSize: 17.0,
+                                onPressed: () {
+                                  Navigator.popAndPushNamed(context, PreviousResult.id);
                                 },
                               ),
                           ),

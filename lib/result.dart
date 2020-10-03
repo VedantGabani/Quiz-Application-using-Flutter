@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiz_application/mainDashboard.dart';
 import 'package:quiz_application/component/rounded_button.dart';
 import 'package:quiz_application/LoginPage.dart';
-import 'package:quiz_application/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -255,11 +254,11 @@ class _ResultState extends State<Result> {
                         Center(
                           child: RoundedButton(
                             colour: Colors.lightBlueAccent,
-                            title: 'Retry',
+                            title: 'Dashboard',
                             onPressed: () {
                               countAnswer = 0;
                               try {
-                                Navigator.popAndPushNamed(context, DashBoard.id);
+                                Navigator.popAndPushNamed(context, MainDashboard.id);
                               } catch (e) {
                                 print(e);
                               }

@@ -1,3 +1,4 @@
+import 'package:quiz_application/PreviousResult.dart';
 import 'package:quiz_application/mainDashboard.dart';
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         DashBoard.id: (context) => DashBoard(),
         Result.id: (context) => Result(),
         MainDashboard.id: (context) => MainDashboard(),
+        PreviousResult.id: (context) => PreviousResult(),
       },
     );
   }
